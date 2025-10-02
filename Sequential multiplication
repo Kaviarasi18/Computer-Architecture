@@ -1,0 +1,35 @@
+def sequential_multiplication(M, Q, n):
+    def twos(val, bits):
+        if val < 0:
+            val += (1 << bits)
+        return val & ((1 << bits) - 1)
+
+    def to_signed(val, bits):
+        if val & (1 << (bits-1)):
+            val -= (1 << bits)
+        return val
+
+    A = 0
+    Q_1 = 0
+    M = twos(M, n)
+    Q = twos(Q, n)
+
+    for _ in range(n):
+        Q0 = Q & 1
+        if Q0 == 0 and Q_1 == 1:
+            A = (A + M) & ((1 << n) - 1)
+        elif Q0 == 1 and Q_1 == 0:
+            A = (A - M) & ((1 << n) - 1)
+        combined = (A << (n+1)) | (Q << 1) | Q_1
+        sign = (combined >> (2*n)) & 1
+        combined >>= 1
+        if sign:
+            combined |= (1 << (2*n))
+
+        A = (combined >> (n+1)) & ((1 << n) - 1)
+        Q = (combined >> 1) & ((1 << n) - 1)
+        Q_1 = combined & 1
+
+    result = (A << n) | Q
+    return to_signed(result, 2*n)
+print("Sequential Multiplication 3 * -4:", sequential_multiplication(3, -4, 4))
