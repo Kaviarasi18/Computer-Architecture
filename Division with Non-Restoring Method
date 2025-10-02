@@ -1,0 +1,18 @@
+def non_restoring_division(dividend, divisor, n_bits):
+    quotient = 0
+    remainder = 0
+    for i in range(n_bits):
+        if remainder >= 0:
+            remainder = (remainder << 1) | ((dividend >> (n_bits-1-i)) & 1)
+            remainder -= divisor
+            quotient = (quotient << 1) | (1 if remainder >= 0 else 0)
+        else:
+            remainder = (remainder << 1) | ((dividend >> (n_bits-1-i)) & 1)
+            remainder += divisor
+            quotient = (quotient << 1) | (1 if remainder >= 0 else 0)
+    if remainder < 0:
+        remainder += divisor
+    return quotient, remainder
+
+q, r = non_restoring_division(13, 3, 4)
+print("Non-Restoring Division: Quotient =", q, ", Remainder =", r)
