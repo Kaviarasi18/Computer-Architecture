@@ -1,0 +1,37 @@
+def bit_pair_multiplication(m, q, n):
+    def twos(val, bits):
+        if val < 0:
+            val += (1 << bits)
+        return val & ((1 << bits) - 1)
+    
+    def to_signed(val, bits):
+        if val & (1 << (bits-1)):
+            val -= (1 << bits)
+        return val
+
+    m = twos(m, n)
+    q = twos(q, n)
+    a = 0
+    q_1 = 0
+
+    for i in range(n):
+        q0 = q & 1
+        if q0 == 0 and q_1 == 1:
+            a = (a + m) & ((1 << n) - 1)
+        elif q0 == 1 and q_1 == 0:
+            a = (a - m) & ((1 << n) - 1)
+
+        combined = (a << (n+1)) | (q << 1) | q_1
+        sign = (combined >> (2*n)) & 1
+        combined >>= 1
+        if sign:
+            combined |= (1 << (2*n))
+
+        a = (combined >> (n+1)) & ((1 << n) - 1)
+        q = (combined >> 1) & ((1 << n) - 1)
+        q_1 = combined & 1
+
+    result = (a << n) | q
+    return to_signed(result, 2*n)
+
+print("Bit-Pair Multiplication (3* -4):", bit_pair_multiplication(3, -4, 4))
