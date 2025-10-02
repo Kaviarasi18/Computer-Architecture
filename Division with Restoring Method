@@ -1,0 +1,15 @@
+def restoring_division(dividend, divisor, n_bits):
+    quotient = 0
+    remainder = 0
+    for i in range(n_bits):
+        remainder = (remainder << 1) | ((dividend >> (n_bits-1-i)) & 1)
+        remainder -= divisor
+        if remainder < 0:
+            quotient = quotient << 1
+            remainder += divisor  # restore
+        else:
+            quotient = (quotient << 1) | 1
+    return quotient, remainder
+
+q, r = restoring_division(13, 3, 4)
+print("Restoring Division: Quotient =", q, ", Remainder =", r)
