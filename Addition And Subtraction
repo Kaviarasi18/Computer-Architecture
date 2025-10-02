@@ -1,0 +1,26 @@
+def twos(value,bits):
+    if(value<0):
+        value+=(1<<bits)
+    return value & ((1<<bits)-1)
+def to_signed(val,bits):
+    if val&(1<<(bits-1)):
+        val-=(1<<bits)
+    return val
+def unsigned_addition(a,b,bits):
+    return (a+b) & ((1<<bits)-1)
+def signed_addition(a,b,bits):
+    ans=(a+b)&((1<<bits)-1)
+    return to_signed(ans,bits)
+def unsigned_subtraction(a,b,bits):
+    return (a-b)&((1<<bits)-1)
+def signed_subtraction(a,b,bits):
+    ans=(a-b)&((1<<bits)-1)
+    return to_signed(ans,bits)
+
+bits=4
+a,b=3,-5
+unsigned_a,unsigned_b=twos(a,bits),twos(b,bits)
+print("Unsigned Addition: ",unsigned_addition(unsigned_a,unsigned_b,bits))
+print("Unsigned Subtraction: ",unsigned_subtraction(unsigned_a,unsigned_b,bits))
+print("Signed Addition: ",signed_addition(a,b,bits))
+print("Signed Subtraction: ",signed_subtraction(a,b,bits))
